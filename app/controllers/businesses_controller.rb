@@ -18,10 +18,18 @@ class BusinessesController < ApplicationController
     # Limit results for performance
     @businesses = @businesses.limit(params[:limit]&.to_i || 50)
 
-    render json: @businesses.as_json(
-      only: [:id, :name, :category, :address, :city, :state, :zip_code],
-      methods: [:latitude, :longitude, :distance_miles]
-    )
+    # Get available categories for the form
+    @categories = Business.distinct.pluck(:category).sort
+
+    respond_to do |format|
+      format.html # Render the search form and results
+      format.json do
+        render json: @businesses.as_json(
+          only: [:id, :name, :category, :address, :city, :state, :zip_code],
+          methods: [:latitude, :longitude, :distance_miles]
+        )
+      end
+    end
   end
 
   private

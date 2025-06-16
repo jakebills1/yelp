@@ -1,0 +1,55 @@
+<div class="business-search">
+  <h1>Find Local Businesses</h1>
+  
+  <div class="search-form">
+    <%= form_with url: businesses_path, method: :get, local: false, id: "business-search-form" do |form| %>
+      <div class="form-group">
+        <%= form.label :category, "Business Category:" %>
+        <%= form.select :category, options_for_select([["All Categories", ""]] + @categories.map { |cat| [cat.titleize, cat] }, params[:category]), {}, { class: "form-control" } %>
+      </div>
+      
+      <div class="form-group">
+        <%= form.label :distance_miles, "Search Radius:" %>
+        <%= form.range_field :distance_miles, min: 0.5, max: 25, step: 0.5, value: params[:distance_miles] || 5, class: "form-control range-slider" %>
+        <span class="range-value"><span id="distance-display">5</span> miles</span>
+      </div>
+      
+      <div class="form-group">
+        <button type="button" id="use-location-btn" class="btn btn-primary">
+          📍 Use My Location
+        </button>
+        <span id="location-status" class="location-status"></span>
+      </div>
+      
+      <%= form.hidden_field :lat %>
+      <%= form.hidden_field :lng %>
+      
+      <div class="form-group">
+        <%= form.submit "Search Businesses", class: "btn btn-success", disabled: true, id: "search-btn" %>
+      </div>
+    <% end %>
+  </div>
+  
+  <div id="search-results">
+    <% if params[:lat].present? && @businesses.any? %>
+      <h3>Found <%= @businesses.count %> businesses:</h3>
+      <div class="businesses-list">
+        <% @businesses.each do |business| %>
+          <div class="business-card">
+            <h4><%= business.name %></h4>
+            <p class="category"><%= business.category.titleize %></p>
+            <p class="address">
+              <%= business.address %><br>
+              <%= business.city %>, <%= business.state %> <%= business.zip_code %>
+            </p>
+            <% if business.respond_to?(:distance_miles) && business.distance_miles %>
+              <p class="distance"><%= business.distance_miles %> miles away</p>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% elsif params[:lat].present? %>
+      <p class="no-results">No businesses found matching your criteria.</p>
+    <% end %>
+  </div>
+</div>
