@@ -1,24 +1,15 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Exploring using postgis in Rails to support the functionality of apps like Yelp.
 
-Things you may want to cover:
+## Requirements
+- Postgres on host
+    - postgis will be installed through a migration
+- Ruby
+- Node
 
-* Ruby version
+## Setup
+`bundle install`
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Running the app
+`rails s`
